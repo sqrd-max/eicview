@@ -1,0 +1,13 @@
+@charset "UTF-8";
+html,
+body {
+    height: 100%;
+    line-height: 2em;
+    display: flex;
+    flex-direction: column;
+    font-family: 'Fredoka', sans-serif;
+}
+
+@import 'header';
+@import 'search';
+
