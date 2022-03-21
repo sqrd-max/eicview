@@ -10,29 +10,101 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@300&display=swap" rel="stylesheet"> 
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans&display=swap" rel="stylesheet">
 </head>
 <body>
 
     <header>
         <div class="logo">
-            <a class="logo__name" href="#">Artifacts</a>
+            <a class="logo__name" href="index.html">Artifacts</a>
         </div>
         <input type="checkbox" id="nav-toggle" hidden>
+        <div class="search">
+            <select class="search__branches" id="branches"></select>
+            <button class="search__button" type="submit" value="Submit">Submit</button>
+        </div>
         <nav class="nav">
             <label for="nav-toggle" class="nav-toggle" onclick></label>
             <ul>
                 <li><a href="#">Link to 3D viewer (central detector)</a>
                 <li><a href="#">File to download ()</a>
                 <li><a href="#">List of artifacts link</a>
-                <li><a href="#">Constants listing</a>
+                <li><a href="assets/pages/constList.html">Constants listing</a>
             </ul>
         </nav>
     </header>
     
-    <div class="search">
-        <select class="search__branches" id="branches"></select>
-        <button class="search__button" type="submit" value="Submit">Submit</button>
+    <div class="list">
+        <h2>Overview</h2>
+        The Athena Detector at IP6 for Electron-Ion Collider experiment.
+        <h4>Detector geometry viewer:</h4>
+        <ul>
+            <li><a href="#">Central detector</a></li>
+            <li><a href="#">Full Detector (including beamline)</a></li>
+            <li><a href="#">Inner detector (without calorimetry)</a></li>
+            <ul>
+                <h4>Subsystem views:</h4>
+                <li><a href="#">Calorimetry</a></li>
+                <li><a href="#">PID</a></li>
+                <ul>
+                    <li><a href="#">dRICH</a></li>
+                    <li><a href="#">pfRICH</a></li>
+                    <li><a href="#">DIRC</a></li>
+                    <li><a href="#">ToF</a></li>
+                </ul>
+                <li><a href="#">Tracking</a></li>
+                <ul>
+                    <li><a href="#">Vertex detector</a></li>
+                </ul>
+                <li><a href="#">Far-forward</a></li>
+            </ul>
+        </ul>
     </div>
+    <div class="images">
+        <figure>
+            <a href="https://eicweb.phy.anl.gov/EIC/detectors/athena/-/jobs/artifacts/master/raw/images/view01.pdf?job=report"><img src="https://eicweb.phy.anl.gov/EIC/detectors/athena/-/jobs/artifacts/master/raw/images/view01.png?job=report"></a>
+            <figcaption>Description</figcaption>
+        </figure>
+        <figure>
+            <a href="https://eicweb.phy.anl.gov/EIC/detectors/athena/-/jobs/artifacts/master/raw/images/view02a.pdf?job=report"><img src="https://eicweb.phy.anl.gov/EIC/detectors/athena/-/jobs/artifacts/master/raw/images/view02a.png?job=report"></a>
+            <figcaption>Description</figcaption>
+        </figure>
+        <figure>
+            <a href="https://eicweb.phy.anl.gov/EIC/detectors/athena/-/jobs/artifacts/master/raw/images/view02b.pdf?job=report"><img src="https://eicweb.phy.anl.gov/EIC/detectors/athena/-/jobs/artifacts/master/raw/images/view02b.png?job=report"></a>
+            <figcaption>Description</figcaption>
+        </figure>
+        <figure>
+            <a href="https://eicweb.phy.anl.gov/EIC/detectors/athena/-/jobs/artifacts/master/raw/images/view02c.pdf?job=report"><img src="https://eicweb.phy.anl.gov/EIC/detectors/athena/-/jobs/artifacts/master/raw/images/view02c.png?job=report"></a>
+            <figcaption>Description</figcaption>
+        </figure>
+        <figure>
+            <a href="https://eicweb.phy.anl.gov/EIC/detectors/athena/-/jobs/artifacts/master/raw/images/view02d.pdf?job=report"><img src="https://eicweb.phy.anl.gov/EIC/detectors/athena/-/jobs/artifacts/master/raw/images/view02d.png?job=report"></a>
+            <figcaption>Description</figcaption>
+        </figure>
+        <figure>
+            <a href="https://eicweb.phy.anl.gov/EIC/detectors/athena/-/jobs/artifacts/master/raw/images/view02e.pdf?job=report"><img src="https://eicweb.phy.anl.gov/EIC/detectors/athena/-/jobs/artifacts/master/raw/images/view02e.png?job=report"></a> 
+            <figcaption>Description</figcaption>
+        </figure>
+    </div>
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
 
 	<!-- Pipeline #28831. Success = 	passed. Branch=master(link) commit=f31bac7b (link). Author wdconinc's 
 	Update for current master, from... 00:18:54 16 hours ago
@@ -53,19 +125,14 @@
 		Constants listing
 	</a><br/>
 
+	 -->
+
+
+
+<!-- [Constants listing]() -->
 	
 
-
-
-[Constants listing]()
-	
-
-    <a href="https://eicweb.phy.anl.gov/EIC/detectors/athena/-/jobs/artifacts/master/raw/images/view01.pdf?job=report"><img src="https://eicweb.phy.anl.gov/EIC/detectors/athena/-/jobs/artifacts/master/raw/images/view01.png?job=report" width="400px" /></a>
-	<a href="https://eicweb.phy.anl.gov/EIC/detectors/athena/-/jobs/artifacts/master/raw/images/view02a.pdf?job=report"><img src="https://eicweb.phy.anl.gov/EIC/detectors/athena/-/jobs/artifacts/master/raw/images/view02a.png?job=report" width="400px" /></a>
-	<a href="https://eicweb.phy.anl.gov/EIC/detectors/athena/-/jobs/artifacts/master/raw/images/view02b.pdf?job=report"><img src="https://eicweb.phy.anl.gov/EIC/detectors/athena/-/jobs/artifacts/master/raw/images/view02b.png?job=report" width="400px" /></a>
-	<a href="https://eicweb.phy.anl.gov/EIC/detectors/athena/-/jobs/artifacts/master/raw/images/view02c.pdf?job=report"><img src="https://eicweb.phy.anl.gov/EIC/detectors/athena/-/jobs/artifacts/master/raw/images/view02c.png?job=report" width="400px" /></a>
-	<a href="https://eicweb.phy.anl.gov/EIC/detectors/athena/-/jobs/artifacts/master/raw/images/view02d.pdf?job=report"><img src="https://eicweb.phy.anl.gov/EIC/detectors/athena/-/jobs/artifacts/master/raw/images/view02d.png?job=report" width="400px" /></a>
-	<a href="https://eicweb.phy.anl.gov/EIC/detectors/athena/-/jobs/artifacts/master/raw/images/view02e.pdf?job=report"><img src="https://eicweb.phy.anl.gov/EIC/detectors/athena/-/jobs/artifacts/master/raw/images/view02e.png?job=report" width="400px" /></a> -->
+    
 
 </body>
 </html>

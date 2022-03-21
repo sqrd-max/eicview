@@ -12,22 +12,18 @@ body {
   font-family: 'Fredoka', sans-serif;
 }
 
-.logo {
-  height: 56px;
+header {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: row;
+          flex-direction: row;
   -webkit-box-align: center;
       -ms-flex-align: center;
           align-items: center;
   background-color: #212529;
-}
-
-.logo__name {
-  color: white;
-  margin-left: 150px;
-  text-decoration: none;
-  font-size: 25px;
 }
 
 .nav {
@@ -53,7 +49,7 @@ body {
   top: 0;
   padding: 0.5em;
   background: none;
-  color: white;
+  color: #7291c0;
   cursor: pointer;
   font-size: 1.7em;
   line-height: 1;
@@ -122,12 +118,11 @@ body {
 .nav > ul > li > a:hover,
 .nav > ul > li > a:focus {
   color: #0a58ca;
+  padding-left: 10px;
 }
 
 .search__branches {
   width: 550px;
-  margin-top: 40px;
-  margin-left: 150px;
 }
 
 .search__button {
@@ -145,5 +140,62 @@ body {
 
 .search__button:hover {
   background-color: #0a58ca;
+}
+
+.logo {
+  height: 56px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+}
+
+.logo__name {
+  color: white;
+  margin-left: 150px;
+  margin-right: 360px;
+  text-decoration: none;
+  font-size: 25px;
+}
+
+.list {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  margin-left: 150px;
+}
+
+.list a {
+  text-decoration: none;
+  color: black;
+  font-size: 600;
+}
+
+.images {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: row;
+          flex-direction: row;
+  -ms-flex-pack: distribute;
+      justify-content: space-around;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -ms-flex-wrap: wrap;
+      flex-wrap: wrap;
+  margin-left: 150px;
+}
+
+.images img {
+  width: 400px;
 }
 /*# sourceMappingURL=style.css.map */
