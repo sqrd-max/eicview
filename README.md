@@ -34,3 +34,21 @@ Different links of artifacts objects
 
 [Constants listing](https://eicweb.phy.anl.gov/EIC/detectors/athena/-/jobs/artifacts/master/raw/doc/constants.out?job=report)
 
+
+## Python backend
+
+Install everything
+
+```
+cd backend
+pip install -r requirements.txt
+```
+
+[python-gitlab library documentation](https://python-gitlab.readthedocs.io/en/stable/)
+[pagination](https://python-gitlab.readthedocs.io/en/stable/api-usage.html?highlight=per_page#pagination)
+
+## GitLab API
+
+[Pagination](https://docs.gitlab.com/ee/api/#pagination)
+
+[Download artifacts](https://docs.gitlab.com/ee/api/job_artifacts.html)
