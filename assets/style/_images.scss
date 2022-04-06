@@ -2,10 +2,32 @@
     display: flex;
     flex-direction: row;
     justify-content: space-around;
-    align-items: center;
+    align-items: flex-end;
     flex-wrap: wrap;
-    margin-left: 150px;
+    margin-left: 110px;
+    
 }
 .images img{
     width: 400px;
+}
+.images figcaption{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+}
+.images figcaption button{
+    background-color: #0b5ed7;
+    border-radius: 5px;
+    box-sizing: border-box;
+    border: none;
+    color: white;
+    width: 150px;
+    height: 30px;
+    margin-top: 10px;
+}
+.images figcaption button:hover{
+    background-color: #0a58ca;
 }

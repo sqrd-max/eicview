@@ -177,6 +177,10 @@ header {
   font-size: 600;
 }
 
+.list a:hover {
+  color: #0a58ca;
+}
+
 .images {
   display: -webkit-box;
   display: -ms-flexbox;
@@ -187,15 +191,49 @@ header {
           flex-direction: row;
   -ms-flex-pack: distribute;
       justify-content: space-around;
+  -webkit-box-align: end;
+      -ms-flex-align: end;
+          align-items: flex-end;
+  -ms-flex-wrap: wrap;
+      flex-wrap: wrap;
+  margin-left: 110px;
+}
+
+.images img {
+  width: 400px;
+}
+
+.images figcaption {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  -ms-flex-pack: distribute;
+      justify-content: space-around;
   -webkit-box-align: center;
       -ms-flex-align: center;
           align-items: center;
   -ms-flex-wrap: wrap;
       flex-wrap: wrap;
-  margin-left: 150px;
+  margin-bottom: 20px;
 }
 
-.images img {
-  width: 400px;
+.images figcaption button {
+  background-color: #0b5ed7;
+  border-radius: 5px;
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
+  border: none;
+  color: white;
+  width: 150px;
+  height: 30px;
+  margin-top: 10px;
+}
+
+.images figcaption button:hover {
+  background-color: #0a58ca;
 }
 /*# sourceMappingURL=style.css.map */
