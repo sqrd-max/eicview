@@ -2,6 +2,7 @@ import gitlab
 import zipfile
 import os
 import sys
+import pathlib
 
 
 def get_directory_name(base_path, project_id, branch, pipeline_id, job_id):
@@ -9,12 +10,22 @@ def get_directory_name(base_path, project_id, branch, pipeline_id, job_id):
     return os.path.join(str(base_path), str(project_id), str(branch), str(pipeline_id), str(job_id))
 
 
-def save_artifacts(job):
+def save_artifacts(job, base_path):
     """Saves artifacts having a job object"""
 
+    # print(job)
     project_id = job.project_id
-    pipeline_id = job.pipeline.id
-    branch= job.pipeline.ref
+    pipeline_id = job.pipeline['id']
+    branch = job.pipeline['ref']
+    job_id = job.id
+    artifacts_expier = job.artifacts_expire_at
+    status = job.status
+
+    print(status)
+
+    pathlib.Path(get_directory_name(base_path, project_id, branch, pipeline_id, job_id)).mkdir(parents=True, exist_ok=True)
+    
+    
 
     # job = project.jobs.get(report_job.id, lazy=True)
     # file_name = '__artifacts.zip'
@@ -45,7 +56,7 @@ def process_pipeline(pipeline, base_path):
     else:
         print(f"Report job id={report_job.id}")
 
-        save_artifacts(report_job)
+        save_artifacts(report_job, base_path)
 
 
 def save_available_artifacts(project, num_pipelines=500):
@@ -55,13 +66,13 @@ def save_available_artifacts(project, num_pipelines=500):
         process_pipeline(pipeline)
 
 
-def save_latest_artifacts(project):
+def save_latest_artifacts(project, base_path):
     """..."""
     pipelines = project.pipelines.list()
 
     # Pipelines are sorted by date, so this is the latest pipeline
     pipeline = pipelines[0]
-    process_pipeline(pipeline)
+    process_pipeline(pipeline, base_path)
 
 
 
@@ -74,7 +85,7 @@ if __name__ == "__main__":
     base_path = os.path.join(this_file_path, "..", "tmp")
     print(base_path)
     print(sys.argv)
-
+    
     # anonymous read-only access for public resources (GitLab.com)
     gl = gitlab.Gitlab()
 
@@ -91,5 +102,6 @@ if __name__ == "__main__":
     # arts_download.py -> download only latest pipeline
     # arts_download.py --id 345 -> download pipeline id=345
 
-    save_latest_artifacts(project)
+    save_latest_artifacts(project, base_path)
+    
 
