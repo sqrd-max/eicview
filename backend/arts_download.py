@@ -21,11 +21,9 @@ def save_artifacts(job, base_path):
     artifacts_expier = job.artifacts_expire_at
     status = job.status
 
-    print(status)
-
-    pathlib.Path(get_directory_name(base_path, project_id, branch, pipeline_id, job_id)).mkdir(parents=True, exist_ok=True)
-    
-    
+    print(artifacts_expier)
+    dir_name = get_directory_name(base_path, project_id, branch, pipeline_id, job_id)
+    pathlib.Path(dir_name).mkdir(parents=True, exist_ok=True)
 
     # job = project.jobs.get(report_job.id, lazy=True)
     # file_name = '__artifacts.zip'
@@ -42,7 +40,7 @@ def process_pipeline(pipeline, base_path):
     """Downloads all things from a pipeline"""
 
     jobs = pipeline.jobs.list(per_page=100)
-    print(f"Pipeline has {len(jobs)} ")
+    print(f"Pipeline has {len(jobs)} jobs ")
 
     report_job = None
     for job in jobs:
