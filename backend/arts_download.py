@@ -3,6 +3,8 @@ import zipfile
 import os
 import sys
 import pathlib
+import datetime
+
 
 
 def get_directory_name(base_path, project_id, branch, pipeline_id, job_id):
@@ -18,19 +20,27 @@ def save_artifacts(job, base_path):
     pipeline_id = job.pipeline['id']
     branch = job.pipeline['ref']
     job_id = job.id
-    artifacts_expier = job.artifacts_expire_at
     status = job.status
 
-    print(artifacts_expier)
+
+    artifacts_expire_at = datetime.datetime.strptime(job.artifacts_expire_at, '%Y-%m-%dT%H:%M:%S.%fZ')
+    current_datetime = datetime.datetime.now()
+    artifacts_expire_in = artifacts_expire_at - current_datetime
+    print(artifacts_expire_at)
+    print(artifacts_expire_in)
+
+    
     dir_name = get_directory_name(base_path, project_id, branch, pipeline_id, job_id)
     pathlib.Path(dir_name).mkdir(parents=True, exist_ok=True)
 
-    # job = project.jobs.get(report_job.id, lazy=True)
+
+    # job = project.jobs.get(job.id, lazy=True)
     # file_name = '__artifacts.zip'
-    # with open(file_name, "wb") as f:
-    #      job.artifacts(streamed=True, action=f.write)
-    # zip = zipfile.ZipFile(file_name)
-    # zip.extractall()
+    # FileFullPath = os.path.join(dir_name, file_name)
+    # with open(FileFullPath, "wb") as f:
+    #     job.artifacts(streamed=True, action=f.write)
+    # zip = zipfile.ZipFile(FileFullPath)
+    # zip.extractall(dir_name)
 
     # make directories
     # https://stackoverflow.com/questions/600268/mkdir-p-functionality-in-python
@@ -71,7 +81,6 @@ def save_latest_artifacts(project, base_path):
     # Pipelines are sorted by date, so this is the latest pipeline
     pipeline = pipelines[0]
     process_pipeline(pipeline, base_path)
-
 
 
 if __name__ == "__main__":
