@@ -26,8 +26,6 @@ def save_artifacts(job, base_path):
 
     artifacts_expire_in = artifacts_expire_at - current_datetime
     
-
-
     if artifacts_expire_at > current_datetime:
 
         dir_name = get_directory_name(base_path, project_id, branch, pipeline_id, job_id)
@@ -70,10 +68,18 @@ def process_pipeline(pipeline, base_path):
         save_artifacts(report_job, base_path)
 
 
-def save_available_artifacts(project):
-    """...."""
+def save_pipelines(project, base_path, arts_count=0):
+    """
+    @arts_count=0 - load all, else number of latst pipelines to process
+    """
+
+    # Documentation about list
+    # https://python-gitlab.readthedocs.io/en/stable/api/gitlab.html#gitlab.mixins.ListMixin
     pipelines = project.pipelines.list(as_list=False)   # <= do paging to load ALL requiested pipelines
-    for pipeline in pipelines:
+    
+    for i, pipeline in enumerate(pipelines):
+        if arts_count!=0 and i >= arts_count:
+            break
         process_pipeline(pipeline, base_path)
 
 
@@ -114,6 +120,6 @@ if __name__ == "__main__":
     # arts_download.py --id 345 -> download pipeline id=345
 
     # save_latest_artifacts(project, base_path)
-    save_available_artifacts(project, base_path)
+    save_pipelines(project, base_path, 10)
 
 # Report job id=619168 упал тут
