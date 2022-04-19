@@ -6,7 +6,6 @@ import pathlib
 import datetime
 
 
-
 def get_directory_name(base_path, project_id, branch, pipeline_id, job_id):
     """Gets the right path to store artifacts"""
     return os.path.join(str(base_path), str(project_id), str(branch), str(pipeline_id), str(job_id))
@@ -22,25 +21,29 @@ def save_artifacts(job, base_path):
     job_id = job.id
     status = job.status
 
-
     artifacts_expire_at = datetime.datetime.strptime(job.artifacts_expire_at, '%Y-%m-%dT%H:%M:%S.%fZ')
     current_datetime = datetime.datetime.now()
+
     artifacts_expire_in = artifacts_expire_at - current_datetime
-    print(artifacts_expire_at)
-    print(artifacts_expire_in)
-
     
-    dir_name = get_directory_name(base_path, project_id, branch, pipeline_id, job_id)
-    pathlib.Path(dir_name).mkdir(parents=True, exist_ok=True)
 
 
-    # job = project.jobs.get(job.id, lazy=True)
-    # file_name = '__artifacts.zip'
-    # FileFullPath = os.path.join(dir_name, file_name)
-    # with open(FileFullPath, "wb") as f:
-    #     job.artifacts(streamed=True, action=f.write)
-    # zip = zipfile.ZipFile(FileFullPath)
-    # zip.extractall(dir_name)
+    if artifacts_expire_at > current_datetime:
+
+        dir_name = get_directory_name(base_path, project_id, branch, pipeline_id, job_id)
+        pathlib.Path(dir_name).mkdir(parents=True, exist_ok=True)
+        
+        print(artifacts_expire_in)
+
+        job = project.jobs.get(job.id, lazy=True)
+        file_name = '__artifacts.zip'
+        FileFullPath = os.path.join(dir_name, file_name)
+        with open(FileFullPath, "wb") as f:
+            job.artifacts(streamed=True, action=f.write)
+        zip = zipfile.ZipFile(FileFullPath)
+        # zip.extractall(dir_name)
+    else:
+        print(f"artifacts expired at {artifacts_expire_at}")
 
     # make directories
     # https://stackoverflow.com/questions/600268/mkdir-p-functionality-in-python
@@ -67,11 +70,12 @@ def process_pipeline(pipeline, base_path):
         save_artifacts(report_job, base_path)
 
 
-def save_available_artifacts(project, num_pipelines=500):
+def save_available_artifacts(project):
     """...."""
-    pipelines = project.pipelines.list()   # <= do paging to load ALL requiested pipelines
+    pipelines = project.pipelines.list(as_list=False)   # <= do paging to load ALL requiested pipelines
     for pipeline in pipelines:
-        process_pipeline(pipeline)
+        process_pipeline(pipeline, base_path)
+
 
 
 def save_latest_artifacts(project, base_path):
@@ -109,6 +113,7 @@ if __name__ == "__main__":
     # arts_download.py -> download only latest pipeline
     # arts_download.py --id 345 -> download pipeline id=345
 
-    save_latest_artifacts(project, base_path)
-    
+    # save_latest_artifacts(project, base_path)
+    save_available_artifacts(project, base_path)
 
+# Report job id=619168 упал тут
