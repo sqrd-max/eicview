@@ -11,7 +11,7 @@ def get_directory_name(base_path, project_id, branch, pipeline_id, job_id):
     return os.path.join(str(base_path), str(project_id), str(branch), str(pipeline_id), str(job_id))
 
 
-def save_artifacts(job, base_path):
+def save_artifacts(job, pipeline, base_path):
     """Saves artifacts having a job object"""
 
     # print(job)
@@ -19,29 +19,45 @@ def save_artifacts(job, base_path):
     pipeline_id = job.pipeline['id']
     branch = job.pipeline['ref']
     job_id = job.id
-    status = job.status
-
-    artifacts_expire_at = datetime.datetime.strptime(job.artifacts_expire_at, '%Y-%m-%dT%H:%M:%S.%fZ')
-    current_datetime = datetime.datetime.now()
-
-    artifacts_expire_in = artifacts_expire_at - current_datetime
+    pipeline_status = pipeline.status
+    job_status = job.status
     
-    if artifacts_expire_at > current_datetime:
+    if pipeline_status=='success': 
+        artifacts_expire_at = datetime.datetime.strptime(job.artifacts_expire_at, '%Y-%m-%dT%H:%M:%S.%fZ')
+        current_datetime = datetime.datetime.now()
 
-        dir_name = get_directory_name(base_path, project_id, branch, pipeline_id, job_id)
-        pathlib.Path(dir_name).mkdir(parents=True, exist_ok=True)
+        artifacts_expire_in = artifacts_expire_at - current_datetime
+
+        if artifacts_expire_at > current_datetime and job_status=='success':
+
+            dir_name = get_directory_name(base_path, project_id, branch, pipeline_id, job_id)
+            pathlib.Path(dir_name).mkdir(parents=True, exist_ok=True)
+            print(f"pipeline status = {pipeline_status}")
+            print(f"pipeline id = {pipeline_id}")
+            print(f"job status = {job_status}")
+            print(artifacts_expire_in)
+            print()
+    
         
-        print(artifacts_expire_in)
+            # job = project.jobs.get(job.id, lazy=True)
+            # file_name = '__artifacts.zip'
+            # file_full_path = os.path.join(dir_name, file_name)
+            # with open(file_full_path, "wb") as f:
+            #     job.artifacts(streamed=True, action=f.write)
+            # zip = zipfile.ZipFile(file_full_path)
+            # zip.extractall(dir_name)
+        else:
+            print(f"artifacts expired at {artifacts_expire_at}")
+            print(f"pipeline status = {pipeline_status}")
+            print(f"pipline id {pipeline_id}")
+            print(f"job status = {job_status}")
+            print()
 
-        job = project.jobs.get(job.id, lazy=True)
-        file_name = '__artifacts.zip'
-        FileFullPath = os.path.join(dir_name, file_name)
-        with open(FileFullPath, "wb") as f:
-            job.artifacts(streamed=True, action=f.write)
-        zip = zipfile.ZipFile(FileFullPath)
-        # zip.extractall(dir_name)
     else:
-        print(f"artifacts expired at {artifacts_expire_at}")
+        print(f"pipeline status = {pipeline_status}")
+        print(f"pipline id {pipeline_id}")
+        print(f"job status = {job_status}")
+        print()
 
     # make directories
     # https://stackoverflow.com/questions/600268/mkdir-p-functionality-in-python
@@ -65,7 +81,7 @@ def process_pipeline(pipeline, base_path):
     else:
         print(f"Report job id={report_job.id}")
 
-        save_artifacts(report_job, base_path)
+        save_artifacts(report_job, pipeline, base_path)
 
 
 def save_pipelines(project, base_path, arts_count=0):
@@ -112,7 +128,7 @@ if __name__ == "__main__":
     # get project
     project_id = 473             # Detector athena
     project = gl.projects.get(project_id)
-
+    
     # TODO analyse sys.argv 
     # arts_download.py --all -> download all pipelenes 500 = all
     # arts_download.py --all 5 -> download 5 last pielines
@@ -120,6 +136,4 @@ if __name__ == "__main__":
     # arts_download.py --id 345 -> download pipeline id=345
 
     # save_latest_artifacts(project, base_path)
-    save_pipelines(project, base_path, 10)
-
-# Report job id=619168 упал тут
+    save_pipelines(project, base_path, 45)
