@@ -13,61 +13,58 @@ def get_directory_name(base_path, project_id, branch, pipeline_id, job_id):
 
 def save_artifacts(job, pipeline, base_path):
     """Saves artifacts having a job object"""
-
-    # print(job)
+    
+    # extracting values
     project_id = job.project_id
     pipeline_id = job.pipeline['id']
     branch = job.pipeline['ref']
-    job_id = job.id
     pipeline_status = pipeline.status
-    job_status = job.status
+    job_expire_str = job.artifacts_expire_at
+
+    # >oO degging
+    print(f"  Saving artifacts... job id={job.id} status='{job.status}' branch='{branch}'")
     
-    if pipeline_status=='success': 
-        artifacts_expire_at = datetime.datetime.strptime(job.artifacts_expire_at, '%Y-%m-%dT%H:%M:%S.%fZ')
-        current_datetime = datetime.datetime.now()
+    # Filtration by job status
+    if job.status=='success': 
+        return
 
-        artifacts_expire_in = artifacts_expire_at - current_datetime
-
-        if artifacts_expire_at > current_datetime and job_status=='success':
-
-            dir_name = get_directory_name(base_path, project_id, branch, pipeline_id, job_id)
-            pathlib.Path(dir_name).mkdir(parents=True, exist_ok=True)
-            print(f"pipeline status = {pipeline_status}")
-            print(f"pipeline id = {pipeline_id}")
-            print(f"job status = {job_status}")
-            print(artifacts_expire_in)
-            print()
-    
+    # Check if expiration time exists at all (no artifacts if not)
+    if not job_expire_str:        
+        print("    No expire time. Skipping job ")
+        return    
         
-            # job = project.jobs.get(job.id, lazy=True)
-            # file_name = '__artifacts.zip'
-            # file_full_path = os.path.join(dir_name, file_name)
-            # with open(file_full_path, "wb") as f:
-            #     job.artifacts(streamed=True, action=f.write)
-            # zip = zipfile.ZipFile(file_full_path)
-            # zip.extractall(dir_name)
-        else:
-            print(f"artifacts expired at {artifacts_expire_at}")
-            print(f"pipeline status = {pipeline_status}")
-            print(f"pipline id {pipeline_id}")
-            print(f"job status = {job_status}")
-            print()
+    # Check expiration time
+    expire_time = datetime.datetime.strptime(job_expire_str, '%Y-%m-%dT%H:%M:%S.%fZ')
 
-    else:
-        print(f"pipeline status = {pipeline_status}")
-        print(f"pipline id {pipeline_id}")
-        print(f"job status = {job_status}")
-        print()
+    
+    current_datetime = datetime.datetime.now()
+    time_left = expire_time - current_datetime
+    if expire_time < current_datetime:
+        print(f"    Artifacts are expired, expiration time = {expire_time} time gone {time_left}")
+        return
 
+    # Ensure the directory exists
+    dir_name = get_directory_name(base_path, project_id, branch, pipeline_id, job.id)
+    pathlib.Path(dir_name).mkdir(parents=True, exist_ok=True)
+
+    # job = project.jobs.get(job.id, lazy=True)
+    # file_name = '__artifacts.zip'
+    # file_full_path = os.path.join(dir_name, file_name)
+    # with open(file_full_path, "wb") as f:
+    #     job.artifacts(streamed=True, action=f.write)
+    # zip = zipfile.ZipFile(file_full_path)
+    # zip.extractall(dir_name)
+    
     # make directories
     # https://stackoverflow.com/questions/600268/mkdir-p-functionality-in-python
 
+    print(f"    Saved sucessfully")
 
 def process_pipeline(pipeline, base_path):
     """Downloads all things from a pipeline"""
 
     jobs = pipeline.jobs.list(per_page=100)
-    print(f"Pipeline has {len(jobs)} jobs ")
+    print(f"Processing pipeline id={pipeline.id} has {len(jobs)} jobs and status: '{pipeline.status}'")
 
     report_job = None
     for job in jobs:
@@ -77,10 +74,8 @@ def process_pipeline(pipeline, base_path):
             break
 
     if not report_job:
-        print("No report job found")
+        print("  No report job found")
     else:
-        print(f"Report job id={report_job.id}")
-
         save_artifacts(report_job, pipeline, base_path)
 
 
