@@ -4,6 +4,7 @@ import os
 import sys
 import pathlib
 import datetime
+from pprint import pprint
 
 
 def get_directory_name(base_path, project_id, branch, pipeline_id, job_id):
@@ -47,14 +48,17 @@ def save_artifacts(job, pipeline, base_path):
     dir_name = get_directory_name(base_path, project_id, branch, pipeline_id, job.id)
     pathlib.Path(dir_name).mkdir(parents=True, exist_ok=True)
 
-    # job = project.jobs.get(job.id, lazy=True)
-    # file_name = '__artifacts.zip'
-    # file_full_path = os.path.join(dir_name, file_name)
-    # with open(file_full_path, "wb") as f:
-    #     job.artifacts(streamed=True, action=f.write)
-    # zip = zipfile.ZipFile(file_full_path)
-    # zip.extractall(dir_name)
-    
+    if not is_sim:
+        # Not a simulation. Download files
+        job = project.jobs.get(job.id, lazy=True)
+        file_full_path = os.path.join(dir_name, 'artifacts.zip')
+        with open(file_full_path, "wb") as f:
+            job.artifacts(streamed=True, action=f.write)
+        zip = zipfile.ZipFile(file_full_path)
+        zip.extractall(dir_name)
+    else:
+
+
     # make directories
     # https://stackoverflow.com/questions/600268/mkdir-p-functionality-in-python
 
@@ -124,11 +128,20 @@ if __name__ == "__main__":
     project_id = 473             # Detector athena
     project = gl.projects.get(project_id)
     
+    print("Program arguments:")
+    pprint(sys.argv)
+
     # TODO analyse sys.argv 
+    # -s --simulate - not really artifacts to file
+
     # arts_download.py --all -> download all pipelenes 500 = all
     # arts_download.py --all 5 -> download 5 last pielines
     # arts_download.py -> download only latest pipeline
     # arts_download.py --id 345 -> download pipeline id=345
+    
+
+    if "-s" in sys.argv or "--simulate" in sys.argv:
+        print("Simulation mode")
 
     # save_latest_artifacts(project, base_path)
-    save_pipelines(project, base_path, 45)
+    #save_pipelines(project, base_path, 45)
