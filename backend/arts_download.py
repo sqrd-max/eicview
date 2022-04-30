@@ -7,6 +7,11 @@ import datetime
 from pprint import pprint
 
 
+
+
+is_sim = False
+is_verbose = False
+
 def get_directory_name(base_path, project_id, branch, pipeline_id, job_id):
     """Gets the right path to store artifacts"""
     return os.path.join(str(base_path), str(project_id), str(branch), str(pipeline_id), str(job_id))
@@ -23,15 +28,17 @@ def save_artifacts(job, pipeline, base_path):
     job_expire_str = job.artifacts_expire_at
 
     # >oO degging
-    print(f"  Saving artifacts... job id={job.id} status='{job.status}' branch='{branch}'")
+    if is_verbose:
+        print(f"  Saving artifacts... job id={job.id} status='{job.status}' branch='{branch}'")
     
     # Filtration by job status
     if job.status=='success': 
         return
 
     # Check if expiration time exists at all (no artifacts if not)
-    if not job_expire_str:        
-        print("    No expire time. Skipping job ")
+    if not job_expire_str:    
+        if is_verbose:    
+            print("    No expire time. Skipping job ")
         return    
         
     # Check expiration time
@@ -41,7 +48,8 @@ def save_artifacts(job, pipeline, base_path):
     current_datetime = datetime.datetime.now()
     time_left = expire_time - current_datetime
     if expire_time < current_datetime:
-        print(f"    Artifacts are expired, expiration time = {expire_time} time gone {time_left}")
+        if is_verbose:
+            print(f"    Artifacts are expired, expiration time = {expire_time} time gone {time_left}")
         return
 
     # Ensure the directory exists
@@ -56,13 +64,17 @@ def save_artifacts(job, pipeline, base_path):
             job.artifacts(streamed=True, action=f.write)
         zip = zipfile.ZipFile(file_full_path)
         zip.extractall(dir_name)
+        if is_verbose:
+            print(f"    Saved sucessfully")
     else:
+        if is_verbose:
+            print(f"    Simulated download and save")
 
 
     # make directories
     # https://stackoverflow.com/questions/600268/mkdir-p-functionality-in-python
 
-    print(f"    Saved sucessfully")
+    
 
 def process_pipeline(pipeline, base_path):
     """Downloads all things from a pipeline"""
@@ -133,6 +145,7 @@ if __name__ == "__main__":
 
     # TODO analyse sys.argv 
     # -s --simulate - not really artifacts to file
+    # -v --verbose
 
     # arts_download.py --all -> download all pipelenes 500 = all
     # arts_download.py --all 5 -> download 5 last pielines
@@ -142,6 +155,11 @@ if __name__ == "__main__":
 
     if "-s" in sys.argv or "--simulate" in sys.argv:
         print("Simulation mode")
+        is_sim = True
+
+    if "-v" in sys.argv or "--verbose" in sys.argv:
+        print("Verbose mode")
+        is_verbose = True
 
     # save_latest_artifacts(project, base_path)
-    #save_pipelines(project, base_path, 45)
+    save_pipelines(project, base_path, 45)
