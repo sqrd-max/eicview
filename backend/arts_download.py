@@ -4,13 +4,15 @@ import os
 import sys
 import pathlib
 import datetime
+import logging
 from pprint import pprint
 
 
 
 
 is_sim = False
-is_verbose = False
+# is_verbose = True
+logging.basicConfig(level=logging.INFO)
 
 def get_directory_name(base_path, project_id, branch, pipeline_id, job_id):
     """Gets the right path to store artifacts"""
@@ -24,12 +26,12 @@ def save_artifacts(job, pipeline, base_path):
     project_id = job.project_id
     pipeline_id = job.pipeline['id']
     branch = job.pipeline['ref']
-    pipeline_status = pipeline.status
     job_expire_str = job.artifacts_expire_at
 
     # >oO degging
-    if is_verbose:
-        print(f"  Saving artifacts... job id={job.id} status='{job.status}' branch='{branch}'")
+    # if is_verbose:
+    #     print(f"  Saving artifacts... job id={job.id} status='{job.status}' branch='{branch}'")
+    logging.info(f"Saving artifacts... job id={job.id} status='{job.status}' branch='{branch}'")
     
     # Filtration by job status
     if job.status=='success': 
@@ -37,8 +39,9 @@ def save_artifacts(job, pipeline, base_path):
 
     # Check if expiration time exists at all (no artifacts if not)
     if not job_expire_str:    
-        if is_verbose:    
-            print("    No expire time. Skipping job ")
+        # if is_verbose:    
+        #     print("    No expire time. Skipping job ")
+        logging.debug("    No expire time. Skipping job ")
         return    
         
     # Check expiration time
@@ -48,8 +51,9 @@ def save_artifacts(job, pipeline, base_path):
     current_datetime = datetime.datetime.now()
     time_left = expire_time - current_datetime
     if expire_time < current_datetime:
-        if is_verbose:
-            print(f"    Artifacts are expired, expiration time = {expire_time} time gone {time_left}")
+        # if is_verbose:
+            #  print(f"    Artifacts are expired, expiration time = {expire_time} time gone {time_left}")
+        logging.debug(f"Artifacts are expired, expiration time = {expire_time} time gone {time_left}")
         return
 
     # Ensure the directory exists
@@ -64,11 +68,13 @@ def save_artifacts(job, pipeline, base_path):
             job.artifacts(streamed=True, action=f.write)
         zip = zipfile.ZipFile(file_full_path)
         zip.extractall(dir_name)
-        if is_verbose:
-            print(f"    Saved sucessfully")
+        # if is_verbose:
+            # print(f"    Saved successfully")
+        logging.info("Saved successfully")
     else:
-        if is_verbose:
-            print(f"    Simulated download and save")
+        # if is_verbose:
+        #     print(f"    Simulated download and save")
+        logging.info("Simulated download and save")
 
 
     # make directories
@@ -97,7 +103,7 @@ def process_pipeline(pipeline, base_path):
 
 def save_pipelines(project, base_path, arts_count=0):
     """
-    @arts_count=0 - load all, else number of latst pipelines to process
+    @arts_count=0 - load all, else number of latest pipelines to process
     """
 
     # Documentation about list
