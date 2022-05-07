@@ -44,6 +44,11 @@ cd backend
 pip install -r requirements.txt
 ```
 
+Path of artifact vault could be controlled by ```EICVIEW_VAULT_PATH``` environment
+variable. If not set, a `tmp` folder is assumed (in development reasons)
+
+
+
 [python-gitlab library documentation](https://python-gitlab.readthedocs.io/en/stable/)
 [pagination](https://python-gitlab.readthedocs.io/en/stable/api-usage.html?highlight=per_page#pagination)
 

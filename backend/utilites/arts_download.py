@@ -8,8 +8,6 @@ import logging
 from pprint import pprint
 
 
-
-
 is_sim = False
 # is_verbose = True
 logging.basicConfig(level=logging.INFO)
@@ -34,7 +32,7 @@ def save_artifacts(job, pipeline, base_path):
     logging.info(f"Saving artifacts... job id={job.id} status='{job.status}' branch='{branch}'")
     
     # Filtration by job status
-    if job.status=='success': 
+    if job.status != 'success':
         return
 
     # Check if expiration time exists at all (no artifacts if not)
@@ -130,9 +128,13 @@ if __name__ == "__main__":
 
     # This file path
     print("This file path is:")
-    this_file_path = os.path.dirname(os.path.abspath(__file__))
 
-    base_path = os.path.join(this_file_path, "..", "tmp")
+    if "EICVIEW_VAULT_PATH" in os.environ.keys():
+        base_path = os.environ["EICVIEW_VAULT_PATH"]
+    else:
+        this_file_path = os.path.dirname(os.path.abspath(__file__))
+        base_path = os.path.join(this_file_path, "..", "..", "tmp")
+
     print(base_path)
     print(sys.argv)
     
