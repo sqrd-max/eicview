@@ -10,7 +10,6 @@ from pprint import pprint
 
 
 is_sim = False
-# is_verbose = True
 logging.basicConfig(level=logging.INFO)
 
 def get_directory_name(base_path, project_id, branch, pipeline_id, job_id):
@@ -162,14 +161,18 @@ if __name__ == "__main__":
     save_pipelines(project, base_path, 2)
 
 
-    from pathlib import Path
-
-    # art_quantity = 0
-    # for f in Path('tmp').rglob('*.zip'):
-    #     art_quantity = art_quantity + 1
-    # print(art_quantity)
-
-    # print(os.path.getsize('tmp'))
-
+    # from pathlib import Path
+ 
+    # def folderSize(base_path):
+    #     size = 0
+    #     numfile = 0
+    #     for file in Path(base_path).rglob('*.zip'):
+    #         if (os.path.isfile(file)):
+    #             size += os.path.getsize(file)
+    #             numfile +=1
+    #     return size, numfile
+        
+    # size, numfile = folderSize(base_path)
+    # print(f'artifacts quantity: {numfile}')
+    # print(f'folder size: {size/1048576:.2f} Mb')
   
-    

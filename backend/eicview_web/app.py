@@ -16,7 +16,7 @@ app.config["vault_path"] = vault_path
 
 @app.before_request
 def before_request():
-    """Runs before any requiest"""
+    """Runs before any request"""
     pass
 
 
@@ -39,7 +39,22 @@ def sample():
 @app.route('/')
 def index():
 
-    return render_template("index.html", test_int=5, test_str="Ha ha ha", test_array=["Dog", "Cat", "Rat"])
+    from pathlib import Path
+
+    def folderSize(vault_path):
+        size = 0
+        numfile = 0
+        for file in Path(vault_path).rglob('*.zip'):
+            if (os.path.isfile(file)):
+                size += os.path.getsize(file)
+                numfile +=1
+        return size, numfile
+        
+    size, numfile = folderSize(vault_path)
+    return (f'artifacts quantity: {numfile} <br> folder size: {size/1048576:.2f} Mb')
+ 
+
+    #return render_template("index.html", test_int=5, test_str="Ha ha ha", test_array=["Dog", "Cat", "Rat"])
 
 
 # register modules
