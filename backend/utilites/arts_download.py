@@ -5,6 +5,7 @@ import sys
 import pathlib
 import datetime
 import logging
+import glob
 from pprint import pprint
 
 
@@ -37,8 +38,6 @@ def save_artifacts(job, pipeline, base_path):
 
     # Check if expiration time exists at all (no artifacts if not)
     if not job_expire_str:    
-        # if is_verbose:    
-        #     print("    No expire time. Skipping job ")
         logging.debug("    No expire time. Skipping job ")
         return    
         
@@ -49,8 +48,6 @@ def save_artifacts(job, pipeline, base_path):
     current_datetime = datetime.datetime.now()
     time_left = expire_time - current_datetime
     if expire_time < current_datetime:
-        # if is_verbose:
-            #  print(f"    Artifacts are expired, expiration time = {expire_time} time gone {time_left}")
         logging.debug(f"Artifacts are expired, expiration time = {expire_time} time gone {time_left}")
         return
 
@@ -64,16 +61,13 @@ def save_artifacts(job, pipeline, base_path):
         file_full_path = os.path.join(dir_name, 'artifacts.zip')
         with open(file_full_path, "wb") as f:
             job.artifacts(streamed=True, action=f.write)
-        zip = zipfile.ZipFile(file_full_path)
-        zip.extractall(dir_name)
-        # if is_verbose:
-            # print(f"    Saved successfully")
+        # zip = zipfile.ZipFile(file_full_path)
+        # zip.extractall(dir_name)
         logging.info("Saved successfully")
     else:
-        # if is_verbose:
-        #     print(f"    Simulated download and save")
         logging.info("Simulated download and save")
 
+    
 
     # make directories
     # https://stackoverflow.com/questions/600268/mkdir-p-functionality-in-python
@@ -106,7 +100,7 @@ def save_pipelines(project, base_path, arts_count=0):
 
     # Documentation about list
     # https://python-gitlab.readthedocs.io/en/stable/api/gitlab.html#gitlab.mixins.ListMixin
-    pipelines = project.pipelines.list(as_list=False)   # <= do paging to load ALL requiested pipelines
+    pipelines = project.pipelines.list(as_list=False)   # <= do paging to load ALL requested pipelines
     
     for i, pipeline in enumerate(pipelines):
         if arts_count!=0 and i >= arts_count:
@@ -136,7 +130,6 @@ if __name__ == "__main__":
         base_path = os.path.join(this_file_path, "..", "..", "tmp")
 
     print(base_path)
-    print(sys.argv)
     
     # anonymous read-only access for public resources (GitLab.com)
     gl = gitlab.Gitlab()
@@ -155,7 +148,7 @@ if __name__ == "__main__":
     # -s --simulate - not really artifacts to file
     # -v --verbose
 
-    # arts_download.py --all -> download all pipelenes 500 = all
+    # arts_download.py --all -> download all pipelines 500 = all
     # arts_download.py --all 5 -> download 5 last pielines
     # arts_download.py -> download only latest pipeline
     # arts_download.py --id 345 -> download pipeline id=345
@@ -165,9 +158,18 @@ if __name__ == "__main__":
         print("Simulation mode")
         is_sim = True
 
-    if "-v" in sys.argv or "--verbose" in sys.argv:
-        print("Verbose mode")
-        is_verbose = True
 
-    # save_latest_artifacts(project, base_path)
-    save_pipelines(project, base_path, 45)
+    save_pipelines(project, base_path, 2)
+
+
+    from pathlib import Path
+
+    # art_quantity = 0
+    # for f in Path('tmp').rglob('*.zip'):
+    #     art_quantity = art_quantity + 1
+    # print(art_quantity)
+
+    # print(os.path.getsize('tmp'))
+
+  
+    
