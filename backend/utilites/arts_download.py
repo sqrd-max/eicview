@@ -60,8 +60,8 @@ def save_artifacts(job, pipeline, base_path):
         file_full_path = os.path.join(dir_name, 'artifacts.zip')
         with open(file_full_path, "wb") as f:
             job.artifacts(streamed=True, action=f.write)
-        # zip = zipfile.ZipFile(file_full_path)
-        # zip.extractall(dir_name)
+        zip = zipfile.ZipFile(file_full_path)
+        zip.extractall(dir_name)
         logging.info("Saved successfully")
     else:
         logging.info("Simulated download and save")
@@ -158,7 +158,7 @@ if __name__ == "__main__":
         is_sim = True
 
 
-    save_pipelines(project, base_path, 2)
+    save_pipelines(project, base_path, 35)
 
 
     # from pathlib import Path

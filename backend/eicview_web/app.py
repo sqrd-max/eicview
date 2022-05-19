@@ -1,6 +1,7 @@
 import os
 from datetime import datetime
 from flask import Flask, render_template
+from numpy import average
 
 app = Flask(__name__)
 app.config.from_object(__name__)
@@ -13,6 +14,7 @@ else:
     vault_path = os.path.abspath(os.path.join(this_file_path, "..", "..", "tmp"))
 
 app.config["vault_path"] = vault_path
+app.config["this_file_path"] = this_file_path
 
 @app.before_request
 def before_request():
@@ -41,21 +43,36 @@ def index():
 
     from pathlib import Path
 
-    def folderSize(vault_path):
+    def folder_size(vault_path):
         size = 0
-        numfile = 0
-        for file in Path(vault_path).rglob('*.zip'):
+        numfile = 0 
+        for file in Path(vault_path).rglob('*'):
             if (os.path.isfile(file)):
                 size += os.path.getsize(file)
                 numfile +=1
         return size, numfile
-        
-    size, numfile = folderSize(vault_path)
-    return (f'artifacts quantity: {numfile} <br> folder size: {size/1048576:.2f} Mb')
- 
 
-    #return render_template("index.html", test_int=5, test_str="Ha ha ha", test_array=["Dog", "Cat", "Rat"])
+    
+    def dir_num(this_file_path):
+        dirnum = 0
+        path = this_file_path
+        for lists in os.listdir(path):
+            sub_path = os.path.join(path, lists)
+            if os.path.isdir(sub_path):
+                dirnum = dirnum+1
+        return dirnum
 
+
+    size, numfile = folder_size(vault_path)
+    dirnum = dir_num(this_file_path)
+
+    average_folder_size = '%.2f' % ((size / (dirnum-1)) / 1048576)
+    size = '%.2f' % (size / 1048576)
+
+    # return f'artifacts quantity: {numfile} <br> folder size: {size} Mb <br> director: {dirnum}'
+    return render_template("index.html",  file_quantity = numfile, file_size = size, dir_quantity = dirnum, average_folder_size = average_folder_size)
+
+    
 
 # register modules
 from statistics.views import mod as statistics_module
